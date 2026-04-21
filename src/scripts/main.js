@@ -5,7 +5,6 @@ const table = document.querySelector('table');
 const titleArr = table.querySelector('tr').querySelectorAll('th');
 const tbody = table.querySelector('tbody');
 
-let prev;
 const officeChoice = [
   'Tokyo',
   'Singapore',
@@ -16,9 +15,19 @@ const officeChoice = [
 ];
 
 // Sort rows
+let currentColumn = null;
+let isAscending = true;
+
 titleArr.forEach((header, index) => {
   header.addEventListener('click', () => {
     const rows = [...tbody.querySelectorAll('tr')];
+
+    if (currentColumn === index) {
+      isAscending = !isAscending;
+    } else {
+      currentColumn = index;
+      isAscending = true;
+    }
 
     const sortedRows = rows.sort((a, b) => {
       const aText = a.children[index].textContent.trim();
@@ -27,24 +36,19 @@ titleArr.forEach((header, index) => {
       const aNumber = parseFloat(aText.replace(/[$,]/g, ''));
       const bNumber = parseFloat(bText.replace(/[$,]/g, ''));
 
-      if (prev === header.textContent) {
-        if (!isNaN(aNumber) && !isNaN(bNumber)) {
-          return bNumber - aNumber;
-        }
+      let comparison;
 
-        return bText.localeCompare(aText);
-      } else if (prev !== header.textContent) {
-        if (!isNaN(aNumber) && !isNaN(bNumber)) {
-          return aNumber - bNumber;
-        }
-
-        return aText.localeCompare(bText);
+      if (!isNaN(aNumber) && !isNaN(bNumber)) {
+        comparison = aNumber - bNumber;
+      } else {
+        comparison = aText.localeCompare(bText);
       }
+
+      return isAscending ? comparison : -comparison;
     });
 
     tbody.innerHTML = '';
     sortedRows.forEach((row) => tbody.appendChild(row));
-    prev = header.textContent;
   });
 });
 
@@ -100,6 +104,7 @@ const selectLabel = document.createElement('select');
 
 selectLabel.name = 'office';
 selectLabel.dataset.qa = 'office';
+selectLabel.required = true;
 officeLabel.appendChild(selectLabel);
 
 for (const office of officeChoice) {
@@ -129,6 +134,14 @@ button.addEventListener('click', (e) => {
   let salary = Number(formData.get('salary'));
 
   if (!firstName || !position || !office || !age || !salary) {
+    pushNotification(
+      10,
+      10,
+      'Data is missing in some inputs',
+      'Missing data',
+      'warning',
+    );
+
     return;
   }
 
@@ -138,6 +151,16 @@ button.addEventListener('click', (e) => {
       10,
       'Name is not correct length',
       'Wrong Name length',
+      'warning',
+    );
+
+    return;
+  } else if (position.length < 4) {
+    pushNotification(
+      10,
+      10,
+      'Position is not correct length',
+      'Wrong Position length',
       'warning',
     );
 
