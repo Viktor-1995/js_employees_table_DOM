@@ -1,6 +1,6 @@
 'use strict';
-
 // write code here
+
 const table = document.querySelector('table');
 const titleArr = table.querySelector('tr').querySelectorAll('th');
 const tbody = table.querySelector('tbody');
@@ -57,10 +57,10 @@ tbody.addEventListener('click', (e) => {
   // console.log(tbody.querySelectorAll('tr')[1].className.includes('active'))
   tbody.querySelectorAll('tr').forEach((row) => {
     if (row.className.includes('active')) {
-      row.className = '';
+      row.classList.remove('active');
     }
   });
-  e.target.parentElement.className = 'active';
+  e.target.parentElement.classList.add('active');
 });
 
 // Form
@@ -139,7 +139,7 @@ button.addEventListener('click', (e) => {
       10,
       'Data is missing in some inputs',
       'Missing data',
-      'warning',
+      'error',
     );
 
     return;
@@ -151,7 +151,7 @@ button.addEventListener('click', (e) => {
       10,
       'Name is not correct length',
       'Wrong Name length',
-      'warning',
+      'error',
     );
 
     return;
@@ -161,7 +161,7 @@ button.addEventListener('click', (e) => {
       10,
       'Position is not correct length',
       'Wrong Position length',
-      'warning',
+      'error',
     );
 
     return;
@@ -171,7 +171,7 @@ button.addEventListener('click', (e) => {
       10,
       'Wrong Age',
       'Age is a bit strange for this action',
-      'warning',
+      'error',
     );
 
     return;
@@ -218,7 +218,7 @@ const pushNotification = (posTop, posRight, title, description, type) => {
   } else if (type === 'error') {
     div.className = div.className + ' error';
   } else if (type === 'warning') {
-    div.className = div.className + ' error';
+    div.className = div.className + ' warning';
   }
 
   h2.innerText = title;
